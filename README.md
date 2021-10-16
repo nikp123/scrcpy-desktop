@@ -19,6 +19,8 @@ How to do it
 
 Just run ```startscreen.sh```, it should do all the magic itself.
 
+NOTE: The current version will reboot your phone. THIS IS INTENTIONAL, it's done so that the operating system doesn't bug out as it usually does with this mode enabled.
+
 
 Limitations
 -----------
