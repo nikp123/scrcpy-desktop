@@ -29,6 +29,30 @@ function enable_desktop_mode {
 	sleep 20
 }
 
+function host_sanity_check {
+	# Check if all the executables are present on the host device
+	for i in adb scrcpy tail pgrep; do
+		which $i >/dev/null 2>&1
+		[[ $? -ne 0 ]] && \
+			echo "Please download $i and add it into your path before running this script." && \
+			exit 1
+	done
+}
+
+function target_sanity_check {
+	[[ $(adb shell getprop ro.build.version.sdk) < 29 ]] && \
+		echo "Sorry, desktop mode is only supported on Android 10 and up." && \
+		exit 1
+
+	# Check if all the executables are present on the target device
+	for i in sh ps grep; do
+		adb shell which $i >/dev/null 2>&1
+		[[ $? -ne 0 ]] && \
+			echo "Your Android device is missing '$i' and this script won't work without it. Sorry..." && \
+			exit 1
+	done
+}
+
 TARGET_TMP_DIR=/data/local/tmp
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
 TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
@@ -36,8 +60,14 @@ TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
 # Screen res/DPI (doesn't accept all values unfortunately)
 TARGET_DISPLAY_MODE=1920x1080/120
 
+# Check if host is capable
+host_sanity_check
+
 # Wait for the device before the script does anything
 adb wait-for-device
+
+# Checks if the target device is capable
+target_sanity_check
 
 # Change secondary display behaviour
 adb shell settings put global enable_freeform_support 1
