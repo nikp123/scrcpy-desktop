@@ -61,7 +61,7 @@ function get_display_params {
 	fi
 
 	if [[ -z $3 ]]; then
-		DENSITY=$(echo "$(xdpyinfo | grep resolution | cut -d' ' -f 7 | cut -d'x' -f 1)*1.33333337" | bc | cut -d'.' -f 1)
+		DENSITY=$(echo "$(xdpyinfo | grep resolution | cut -d' ' -f 7 | cut -d'x' -f 1)*1.66666667" | bc | cut -d'.' -f 1)
 	else
 		DENSITY=$3
 	fi
@@ -72,9 +72,6 @@ function get_display_params {
 TARGET_TMP_DIR=/data/local/tmp
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
 TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
-
-# Screen res/DPI (doesn't accept all values unfortunately)
-TARGET_DISPLAY_MODE=1920x1080/120
 
 # Check if host is capable
 host_sanity_check
@@ -97,7 +94,6 @@ if [ "$result" == "0" ]; then
 fi
 
 get_display_params
-echo $TARGET_DISPLAY_MODE
 
 # Use the secondary screen option to generate the other screen
 adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
@@ -107,6 +103,23 @@ sleep 1
 
 # Do your magic
 display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
+
+# if fetching fails, try defaults
+if [ "$display" = "" ]; then
+	echo "Host system has incompatible settings. Sorry about that."
+
+	# Screen res/DPI (doesn't accept all values unfortunately)
+	TARGET_DISPLAY_MODE=1920x1080/120
+
+	# Use the secondary screen option to generate the other screen
+	adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
+
+	# Wait for the display to appear
+	sleep 1
+
+	# Do your magic
+	display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
+fi
 
 # use -S if you're edgy
 scrcpy --display $display -w &
