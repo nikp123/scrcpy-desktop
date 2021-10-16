@@ -24,9 +24,7 @@ Limitations
 -----------
 
  * Only 1080p mode supported
- * No input whatsoever
- * OSK may be bugging you
- * Non-portable (as it's scrcpy version dependent)
+ * OSK may be bugging you (a workaround is to disable it or have a bluetooth keyboard instead)
  * No audio at all
  * A very botched implementation ATM
 
