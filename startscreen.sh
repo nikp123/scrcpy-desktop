@@ -21,7 +21,9 @@ display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -
 
 # use -S if you're edgy
 scrcpy --display $display -w &
-SCRCPY_PID=$?
+
+# Bash let me down so this is the alternative I have to work with
+SCRCPY_PID=$(pgrep scrcpy)
 
 #
 # Payload section starts here
@@ -32,8 +34,10 @@ adb push payload/stage1.sh $TARGET_SCRIPT1
 adb push payload/stage2.sh $TARGET_SCRIPT2
 adb shell chmod +x $TARGET_SCRIPT1
 adb shell chmod +x $TARGET_SCRIPT2
-adb shell $TARGET_SCRIPT1
+adb shell $TARGET_SCRIPT1 &
 
-wait $SCRCPY_PID
+# Because wait is broken, I'm using this
+echo SCRCPY PID: $SCRCPY_PID
+tail --pid=$SCRCPY_PID -f /dev/null
 
 exit 0
