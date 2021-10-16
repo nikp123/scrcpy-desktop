@@ -1,39 +1,27 @@
 #!/bin/bash
 
-# This script is written to work with version 1.19 ONLY
-SCRCPY_SERVER_URL="https://github.com/Genymobile/scrcpy/releases/download/v1.19/scrcpy-server-v1.19"
-
-SCRCPY_PORT=27183
-TMP_DIR=/tmp/scrcpy-desktop
-TMP_STREAM=$TMP_DIR/stream
-SCRCPY_JAR=$TMP_DIR/scrcpy_server.jar
-
 TARGET_TMP_DIR=/data/local/tmp
-TARGET_JAR=$TARGET_TMP_DIR/scrcpy-server.jar
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
 TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
 
-# Create the temp dir
-mkdir -p $TMP_DIR
+# Screen res/DPI (doesn't accept all values unfortunately)
+TARGET_DISPLAY_MODE=1920x1080/120
 
-# Download the payload binary
-wget "$SCRCPY_SERVER_URL" -O $SCRCPY_JAR
+# Change secondary display behaviour
+adb shell settings put global enable_freeform_support 1
+adb shell settings put global force_desktop_mode_on_external_displays 1
+adb shell settings put global force_resizable_activities 1
 
-# Pushing the payload JAR scrcpy server
-adb push $SCRCPY_JAR $TARGET_JAR
+# Use the secondary screen option to generate the other screen
+adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
 
-# Establishing a port connection
-adb reverse localabstract:scrcpy tcp:$SCRCPY_PORT
+sleep 1
 
-# Add a FIFO stream to said port
-mkfifo $TMP_STREAM
-nc -l -p $SCRCPY_PORT > $TMP_STREAM &
+display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
 
-# Launch the player (in the background)
-mpv $TMP_STREAM --profile=low-latency --untimed &
-
-# A slight delay so that the server recognizes the listener immediatelly
-sleep .5
+# use -S if you're edgy
+scrcpy --display $display -w &
+SCRCPY_PID=$?
 
 #
 # Payload section starts here
@@ -46,8 +34,6 @@ adb shell chmod +x $TARGET_SCRIPT1
 adb shell chmod +x $TARGET_SCRIPT2
 adb shell $TARGET_SCRIPT1
 
-# Potentially dangerous cleanup operations
-rm $TMP_STREAM
-rm -rf $TMP_DIR
+wait $SCRCPY_PID
 
 exit 0
