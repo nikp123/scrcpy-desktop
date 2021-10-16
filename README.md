@@ -8,7 +8,7 @@ For this to work you'll need to do the following:
  4. Android 10 (MINIMUM) running on the device
  5. Developer mode enabled
  6. Your PC MUST have ADB access to your phone
- 7. MPV, wget, adb and netcat installed on the host
+ 7. ADB and SCRCPY installed on your PC
  8. Proper binutils (for now) on the Android device
 
 
