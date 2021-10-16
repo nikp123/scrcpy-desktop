@@ -17,9 +17,12 @@ For this to work you'll need to do the following:
 How to do it
 ------------
 
+
 Just run ```startscreen.sh```, it should do all the magic itself.
 
-NOTE: The current version will reboot your phone. THIS IS INTENTIONAL, it's done so that the operating system doesn't bug out as it usually does with this mode enabled.
+NOTE: It may or may not prompt you to restart your device, which you have to do
+for a one-time setup. After that, you no longer need to do (unless you change
+that particular option under developer settings)
 
 
 Limitations

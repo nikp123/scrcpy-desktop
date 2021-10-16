@@ -1,5 +1,34 @@
 #!/bin/bash
 
+# Functions go here
+function enable_desktop_mode {
+	echo "This device doesn't have desktop mode enabled!!!!"
+	echo "This will require enabling said option (done automatically)"
+	echo "However for it to apply, your device needs to restart"
+	read -p "Press any key restart your phone and continue with this script"
+
+	adb shell settings put global force_desktop_mode_on_external_displays 1
+	echo "Enabled desktop mode"
+
+	# Prevents a bug where the display shows up before this option is enabled properly
+	adb shell settings put global overlay_display_devices none
+
+	# Just to make sure that everything's written to disk before the forced reboot
+	adb shell sync
+	sleep 2
+
+	# You need to reboot aparently for it to apply
+	adb reboot
+	echo "Rebooting..."
+
+	# Wait for it to reappear
+	adb wait-for-device
+	echo "Waiting for the device to respond"
+
+	# Wait for the services to initialize
+	sleep 20
+}
+
 TARGET_TMP_DIR=/data/local/tmp
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
 TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
@@ -12,21 +41,22 @@ adb wait-for-device
 
 # Change secondary display behaviour
 adb shell settings put global enable_freeform_support 1
-adb shell settings put global force_desktop_mode_on_external_displays 1
 adb shell settings put global force_resizable_activities 1
+
+# Check if desktop mode is already enabled, if not, prompt the user and do the
+# required steps
+result=$(adb shell settings get global force_desktop_mode_on_external_displays)
+if [ "$result" == "0" ]; then
+	enable_desktop_mode
+fi
 
 # Use the secondary screen option to generate the other screen
 adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
 
-# You need to reboot aparently for it to apply
-adb reboot
+# Wait for the display to appear
+sleep 1
 
-# Wait for it to reappear
-adb wait-for-device
-
-# Wait for the services to initialize
-sleep 20
-
+# Do your magic
 display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
 
 # use -S if you're edgy

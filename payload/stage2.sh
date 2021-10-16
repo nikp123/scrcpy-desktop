@@ -10,6 +10,5 @@ settings put global overlay_display_devices 0
 
 # (Hopefully) Restore sane defaults
 settings put global enable_freeform_support 0
-settings put global force_desktop_mode_on_external_displays 0
 settings put global force_resizable_activities 0
 
