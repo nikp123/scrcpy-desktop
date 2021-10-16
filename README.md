@@ -1,4 +1,6 @@
 
+ [![image alt text](https://github.com/nikp123/scrcpy-desktop/blob/98c8dfce3d5d1f52962aecc32c819d847a2ba500/image.png)](https://github.com/nikp123/scrcpy-desktop/blob/98c8dfce3d5d1f52962aecc32c819d847a2ba500/image.png)
+
 For this to work you'll need to do the following:
 -------------------------------------------------
 
