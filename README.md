@@ -28,7 +28,6 @@ that particular option under developer settings)
 Limitations
 -----------
 
- * Only 1080p mode supported
  * OSK may be bugging you (a workaround is to disable it or have a bluetooth keyboard instead)
  * No audio at all
  * A very botched implementation ATM
