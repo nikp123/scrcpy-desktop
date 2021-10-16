@@ -7,12 +7,9 @@ For this to work you'll need to do the following:
  3. A proper USB connection between the Android device and the PC in question
  4. Android 10 (MINIMUM) running on the device
  5. Developer mode enabled
- 6. "Force activities to be resizable" to be enabled
- 7. "Enable freeform windows" to be enabled
- 8. "Force desktop mode" to be enabled
- 9. Your PC MUST have ADB access to your phone
-10. MPV, wget, adb and netcat installed on the host
-11. Proper binutils (for now) on the Android device
+ 6. Your PC MUST have ADB access to your phone
+ 7. MPV, wget, adb and netcat installed on the host
+ 8. Proper binutils (for now) on the Android device
 
 
 How to do it
