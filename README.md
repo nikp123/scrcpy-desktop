@@ -40,7 +40,7 @@ it's contents so that the ```.exe``` files are located within the bin folder and
 not as an sub-folder.
 4. Open the extracted repo folder within explorer.
 5. Type ```powershell``` within the address bar and press enter
-6. Type ```.\startscreen.ps1 -Resolution widthxheight your_desired_dpi``` and
+6. Type ```.\startscreen.ps1 -Resolution widthxheight -DPI your_desired_dpi``` and
 press enter.
 7. If Windows bothers you with a prompt talking about trust, press R to run the
 script.
