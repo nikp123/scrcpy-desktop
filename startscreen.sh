@@ -8,6 +8,7 @@ function enable_desktop_mode {
 	read -p "Press any key restart your phone and continue with this script"
 
 	adb shell settings put global force_desktop_mode_on_external_displays 1
+	adb shell settings put global force_allow_on_external 1
 	echo "Enabled desktop mode"
 
 	# Prevents a bug where the display shows up before this option is enabled properly
@@ -89,6 +90,10 @@ adb shell settings put global force_resizable_activities 1
 # Check if desktop mode is already enabled, if not, prompt the user and do the
 # required steps
 result=$(adb shell settings get global force_desktop_mode_on_external_displays)
+if [ "$result" == "0" ]; then
+	enable_desktop_mode
+fi
+result=$(adb shell settings get global force_allow_on_external)
 if [ "$result" == "0" ]; then
 	enable_desktop_mode
 fi
