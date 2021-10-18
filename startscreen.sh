@@ -54,16 +54,16 @@ function target_sanity_check {
 }
 
 function get_display_params {
-	if [[ -z $2 ]]; then
+	if [[ -z $1 ]]; then
 		RESOLUTION=$(xdpyinfo | grep dimensions | cut -d' ' -f 7)
 	else
-		RESOLUTION=$2
+		RESOLUTION=$1
 	fi
 
-	if [[ -z $3 ]]; then
+	if [[ -z $2 ]]; then
 		DENSITY=$(echo "$(xdpyinfo | grep resolution | cut -d' ' -f 7 | cut -d'x' -f 1)*1.66666667" | bc | cut -d'.' -f 1)
 	else
-		DENSITY=$3
+		DENSITY=$2
 	fi
 
 	TARGET_DISPLAY_MODE=$(echo $RESOLUTION/$DENSITY)
@@ -93,7 +93,7 @@ if [ "$result" == "0" ]; then
 	enable_desktop_mode
 fi
 
-get_display_params
+get_display_params $1 $2
 
 # Use the secondary screen option to generate the other screen
 adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE

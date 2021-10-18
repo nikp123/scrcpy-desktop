@@ -24,6 +24,11 @@ NOTE: It may or may not prompt you to restart your device, which you have to do
 for a one-time setup. After that, you no longer need to do (unless you change
 that particular option under developer settings)
 
+### Changing options
+
+When running the ```startscreen.sh``` script you can change the resolution and
+DPI via command-line arguments, for example: ```./startscreen.sh 1920x1080 120```
+
 
 Limitations
 -----------
