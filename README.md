@@ -17,6 +17,7 @@ For this to work you'll need to do the following:
 How to do it
 ------------
 
+### On Linux
 
 Just run ```startscreen.sh```, it should do all the magic itself.
 
@@ -24,18 +25,36 @@ NOTE: It may or may not prompt you to restart your device, which you have to do
 for a one-time setup. After that, you no longer need to do (unless you change
 that particular option under developer settings)
 
-### Changing options
+#### Changing options
 
 When running the ```startscreen.sh``` script you can change the resolution and
 DPI via command-line arguments, for example: ```./startscreen.sh 1920x1080 120```
+
+### On Windows
+
+1. [Download this repo](https://github.com/nikp123/scrcpy-desktop/archive/refs/heads/main.zip)
+and extract the contents.
+2. Inside this repo, create a folder named ```bin```.
+3. [Download scrcpy](https://github.com/Genymobile/scrcpy/releases) and extract
+it's contents so that the ```.exe``` files are located within the bin folder and
+not as an sub-folder.
+4. Open the extracted repo folder within explorer.
+5. Type ```powershell``` within the address bar and press enter
+6. Type ```.\startscreen.ps1 -Resolution widthxheight your_desired_dpi``` and
+press enter.
+7. If Windows bothers you with a prompt talking about trust, press R to run the
+script.
+8. Enjoy.
 
 
 Limitations
 -----------
 
- * OSK may be bugging you (a workaround is to disable it or have a bluetooth keyboard instead)
+ * OSK may be bugging you (a workaround is to disable it or have a bluetooth
+ keyboard instead)
  * No audio at all
  * A very botched implementation ATM
+ * The Windows version has no way to automatically obtain the resolution
 
 
 Credits:
