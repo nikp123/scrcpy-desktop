@@ -6,7 +6,7 @@ while ps -Afo PID,ARGS=CMD | grep CLASSPATH | grep -v grep; do
 done
 
 # Destroy the other screen as it is no longer needed
-settings put global overlay_display_devices 0
+settings delete global overlay_display_devices
 
 # (Hopefully) Restore sane defaults
 settings put global enable_freeform_support 0
