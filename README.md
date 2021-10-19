@@ -52,6 +52,14 @@ press enter.
 script.
 8. Enjoy.
 
+Troubleshooting
+---------------
+
+If after running the script all you get is a black screen. That means that the
+Android OS that you're running is missing a "desktop launcher". This can be fixed
+by installing it, for example 
+[Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar)
+.
 
 Limitations
 -----------
