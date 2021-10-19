@@ -5,13 +5,14 @@ For this to work you'll need to do the following:
 -------------------------------------------------
 
  1. Have a proper USB cable that works
- 2. Have a PC that is ABLE to process real-time video
- 3. A proper USB connection between the Android device and the PC in question
- 4. Android 10 (MINIMUM) running on the device
- 5. Developer mode enabled
- 6. Your PC MUST have ADB access to your phone
- 7. ADB and SCRCPY installed on your PC
- 8. Proper binutils (for now) on the Android device
+ (or a good Wi-Fi for use with ADB wireless)
+ 3. Have a PC that is ABLE to process real-time video
+ 4. Make sure that the connection is good (USB or Wi-Fi)
+ 5. Android 10 (MINIMUM) running on the device
+ 6. Developer mode enabled
+ 7. Your PC MUST have ADB access to your phone
+ 8. ADB and SCRCPY installed on your PC
+ 9. Proper binutils (for now) on the Android device
 
 
 How to do it
