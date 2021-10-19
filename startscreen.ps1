@@ -1,5 +1,7 @@
 param($Resolution, $DPI)
 
+$KEYBOARD_PACKAGE="com.wparam.nullkeyboard"
+
 # Functions go here
 function enable_desktop_mode {
 	echo "This device doesn't have desktop mode enabled!!!!"
@@ -35,9 +37,7 @@ function host_sanity_check {
 	$BINlist = "adb,scrcpy"
 	$BINlist = $BINlist.split(",");
 	foreach ($i in $BINlist) {
-		if (Test-Path "bin\$i.exe") {
-			# noop
-		} else {
+		if (!(Test-Path "bin\$i.exe")) {
 			throw "$i is missing. Are you sure you downloaded scrcpy?"
 		}
 	}
@@ -57,6 +57,15 @@ function target_sanity_check {
 		if ($? -eq 0) {
 			throw "Your Android device is missing '$i' and this script won't work without it. Sorry..."
 		}
+	}
+
+	if ( !([string](.\bin\adb.exe shell "pm list package | grep $KEYBOARD_PACKAGE"))) {
+		echo "Null keyboard not installed. Please install it so we can hide the"
+		echo "keyboard while in desktop mode!"
+		echo ""
+		echo "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
+		echo "After installing the app, we can continue..."
+		pause
 	}
 }
 
