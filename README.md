@@ -17,6 +17,11 @@ For this to work you'll need to do the following:
 How to do it
 ------------
 
+### On Android device
+
+Install
+[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard)
+
 ### On Linux
 
 Just run ```startscreen.sh```, it should do all the magic itself.
