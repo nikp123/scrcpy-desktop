@@ -127,7 +127,7 @@ if [ "$display" = "" ]; then
 fi
 
 # use -S if you're edgy
-scrcpy --display $display -w &
+scrcpy --display $display -w -S &
 
 # Bash let me down so this is the alternative I have to work with
 SCRCPY_PID=$(pgrep scrcpy)
