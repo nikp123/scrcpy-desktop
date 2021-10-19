@@ -1,5 +1,7 @@
 #!/bin/bash
 
+KEYBOARD_PACKAGE=com.wparam.nullkeyboard
+
 # Functions go here
 function enable_desktop_mode {
 	echo "This device doesn't have desktop mode enabled!!!!"
@@ -52,6 +54,15 @@ function target_sanity_check {
 			echo "Your Android device is missing '$i' and this script won't work without it. Sorry..." && \
 			exit 1
 	done
+
+	keyboardpresent=$(adb shell pm list package | grep $KEYBOARD_PACKAGE)
+	if [ -z $keyboardpresent ]; then
+		echo "Null keyboard not installed. Please install it so we can hide the"
+		echo "keyboard while in desktop mode!"
+		echo
+		echo "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
+		read -p "Once you've installed the app, press any key to continue."
+	fi
 }
 
 function get_display_params {
