@@ -1,5 +1,6 @@
 param($Resolution, $DPI)
 
+$LAUNCHER_PACKAGE="com.farmebb.taskbar"
 $KEYBOARD_PACKAGE="com.wparam.nullkeyboard"
 
 # Functions go here
@@ -65,6 +66,18 @@ function target_sanity_check {
 		echo ""
 		echo "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
 		echo "After installing the app, we can continue..."
+		.\bin\adb.exe shell am start -a android.intent.action.VIEW -d "market://details?=$KEYBOARD_PACKAGE"
+		pause
+	}
+	
+	if ( !([string](.\bin\adb.exe shell "pm list package | grep $LAUNCHER_PACKAGE"))) {
+		echo "Taskbar not installed, please install it so that you wouldn't end"
+		echo "up in a situation where the launcher is not installed"
+		echo "https://github.com/nikp123/scrcpy-desktop/issues/7"
+		echo
+		echo "App link: https://play.google.com/store/apps/details?id=$LAUNCHER_PACKAGE"
+		echo "After installing the app, we can continue..."
+		.\bin\adb.exe shell am start -a android.intent.action.VIEW -d "market://details?=$LAUNCHER_PACKAGE"
 		pause
 	}
 }

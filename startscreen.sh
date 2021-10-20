@@ -1,5 +1,6 @@
 #!/bin/bash
 
+LAUNCHER_PACKAGE=com.farmebb.taskbar
 KEYBOARD_PACKAGE=com.wparam.nullkeyboard
 
 # Functions go here
@@ -61,6 +62,18 @@ function target_sanity_check {
 		echo "keyboard while in desktop mode!"
 		echo
 		echo "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
+		adb shell am start -a android.intent.action.VIEW -d "market://details?=$KEYBOARD_PACKAGE"
+		read -p "Once you've installed the app, press any key to continue."
+	fi
+
+	launcherpresent=$(adb shell pm list package | grep $LAUNCHER_PACKAGE)
+	if [ -z $launcherpresent ]; then
+		echo "Taskbar not installed, please install it so that you wouldn't end"
+		echo "up in a situation where the launcher is not installed"
+		echo "https://github.com/nikp123/scrcpy-desktop/issues/7"
+		echo
+		echo "App link: https://play.google.com/store/apps/details?id=$LAUNCHER_PACKAGE"
+		adb shell am start -a android.intent.action.VIEW -d "market://details?=$LAUNCHER_PACKAGE"
 		read -p "Once you've installed the app, press any key to continue."
 	fi
 }
