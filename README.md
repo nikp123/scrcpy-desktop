@@ -21,7 +21,12 @@ How to do it
 ### On Android device
 
 Install
-[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard)
+[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard).
+
+Install
+[Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar).
+
+If you don't you'll automatically get redirected to the Play Store page of those two apps.
 
 ### On Linux
 
