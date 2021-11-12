@@ -1,6 +1,6 @@
 param($Resolution, $DPI)
 
-$LAUNCHER_PACKAGE="com.farmebb.taskbar"
+$LAUNCHER_PACKAGE="com.farmerbb.taskbar"
 $KEYBOARD_PACKAGE="com.wparam.nullkeyboard"
 
 # Functions go here
