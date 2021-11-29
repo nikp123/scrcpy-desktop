@@ -21,7 +21,8 @@ How to do it
 ### On Android device
 
 Install
-[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard).
+[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard)
+and enable as an input layout it within your language settings.
 
 Install
 [Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar).
