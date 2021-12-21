@@ -91,6 +91,7 @@ function target_sanity_check {
 		echowrapper ""
 		echowrapper "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
 		echowrapper "After installing the app, we can continue..."
+		# It seams that null keyboard was pulled from playstore so it may not work.
 		& $PATHS.adb shell am start -a android.intent.action.VIEW -d "market://details?id=$KEYBOARD_PACKAGE"
 		pause
 	}
@@ -176,7 +177,7 @@ if ( "$display" -eq "" ) {
 	& $PATHS.adb shell "settings put global overlay_display_devices $TARGET_DISPLAY_MODE"
 
 	# Wait for the display to appear
-	Start-Sleep 3
+	Start-Sleep 1
 
 	# Do your magic
 	$display = [string](& $PATHS.adb shell "$display_fetch_cmd")
