@@ -111,6 +111,7 @@ function target_sanity_check {
 $TARGET_TMP_DIR = "/data/local/tmp"
 $TARGET_SCRIPT1 = "$TARGET_TMP_DIR/scrcpy-payload1.sh"
 $TARGET_SCRIPT2 = "$TARGET_TMP_DIR/scrcpy-payload2.sh"
+$FILE = "$TARGET_TMP_DIR/VerySpecificFileNameThatIsVeryUnlikelyToOverlapWithAnotherOneThatAlreadyExistJustForSure21341r124kajfosfhoshifosngvoierg.txt"
 
 # Check if host is capable
 host_sanity_check
@@ -184,10 +185,7 @@ if ( "$display" -eq "" ) {
 }
 
 # use -S if you're edgy
-$SCRCPY_PROC = Start-Process -NoNewWindow -FilePath $PATHS.scrcpy -PassThru -ArgumentList @('--display', "$display", '-w')
-
-# Bash let me down so this is the alternative I have to work with
-$SCRCPY_PID = $SCRCPY_PROC.ID
+$SCRCPY_PID = (Start-Process -NoNewWindow -FilePath $PATHS.scrcpy -PassThru -ArgumentList @('--display', "$display", '-w', '--turn-screen-off')).ID
 
 #
 # Payload section starts here
@@ -198,7 +196,11 @@ $SCRCPY_PID = $SCRCPY_PROC.ID
 & $PATHS.adb push payload/stage2.sh $TARGET_SCRIPT2
 & $PATHS.adb shell chmod +x $TARGET_SCRIPT1
 & $PATHS.adb shell chmod +x $TARGET_SCRIPT2
-Start-Process -NoNewWindow -FilePath $PATHS.adb -ArgumentList shell, $TARGET_SCRIPT1
+
+$INTERVAL = 1
+
+$CONNECTION_UPDATER_PID = (Start-Process -NoNewWindow -FilePath "powershell" -PassThru -ArgumentList "./connectionKeeper.ps1 $FILE $INTERVAL $($PATHS.adb)").ID
+$ADB_SHELL_PID = (Start-Process -NoNewWindow -FilePath $PATHS.adb -PassThru -ArgumentList shell, "$TARGET_SCRIPT1 $FILE $INTERVAL").ID
 
 # Add disclaimer
 echowrapper "-----------------------------------------------------"
@@ -207,7 +209,26 @@ echowrapper "|  Please unlock the phone once the screen appears  |"
 echowrapper "|                                                   |"
 echowrapper "-----------------------------------------------------"
 
-# Because wait is broken, I'm using this
-Wait-Process -Id $SCRCPY_PID
+
+try {
+	Wait-Process -ErrorAction Stop -Id $SCRCPY_PID
+}
+catch {
+	echowrapper "SCRCPY ended unexpectedly. Ending..."
+}
+
+try {
+	Stop-Process -ErrorAction Stop -Id $CONNECTION_UPDATER_PID
+}
+catch {
+	echowrapper "Connection updater script ended unexpectedly. Ending..."
+}
+
+try {
+	Stop-Process -ErrorAction Stop -Id $ADB_SHELL_PID
+}
+catch {
+	echowrapper "ADB shell ended unexpectedly. Ending..."
+}
 
 exit 0
