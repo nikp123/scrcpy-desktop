@@ -23,6 +23,7 @@ How to do it
 Install
 [Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard)
 and enable as an input layout it within your language settings.
+It seams to be unavailable in playstore for a while now. In the meantime you can install it from reputable sources like apkmirror.
 
 Install
 [Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar).
