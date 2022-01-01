@@ -2,13 +2,12 @@ param($Resolution, $DPI)
 
 $LAUNCHER_PACKAGE = "com.farmerbb.taskbar"
 $KEYBOARD_PACKAGE = "com.wparam.nullkeyboard"
-$SCRIPT_NAME = $MyInvocation.MyCommand.Name 
+$SCRIPT_NAME = $MyInvocation.MyCommand.Name
 
 # By default get adb and scrcpy paths from special bin folder, like in older versions of this script.
 # It can be overwritten in host_sanity_check function in situations where binary isn't located in bin folder, but is
 # found somewhere in $PATH enviroment variable
 $PATHS = @{}
-
 
 # Functions go here
 function echowrapper($str) {
@@ -51,7 +50,10 @@ function host_sanity_check {
 	foreach ($i in $BINlist) {
 		if ((Test-Path "bin\$i.exe")) {
 			echowrapper "Binary ($i) found in bin folder."
-			$PATHS.Add($i, "bin\$i.exe")
+
+			# Determine script location for PowerShell
+			$ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
+			$PATHS.Add($i, "$ScriptDir\bin\$i.exe")
 		}
 		else {
 			echowrapper "Binary ($i) was not found in bin folder. Searching in `$PATH ..."
@@ -71,7 +73,7 @@ function host_sanity_check {
 function target_sanity_check {
 	# Check Android version
 	if ( [string](& $PATHS.adb shell "getprop ro.build.version.sdk") -lt 29 ) {
-		throw "Sorry, desktop mode is only supported on Android 10 and up." 
+		throw "Sorry, desktop mode is only supported on Android 10 and up."
 		# Most of the times scrcpy sees just black screen instead of virtual display so it may sill not work on android 10
 	}
 
@@ -95,7 +97,7 @@ function target_sanity_check {
 		& $PATHS.adb shell am start -a android.intent.action.VIEW -d "market://details?id=$KEYBOARD_PACKAGE"
 		pause
 	}
-	
+
 	if ( !([string](& $PATHS.adb shell "pm list package | grep $LAUNCHER_PACKAGE"))) {
 		echowrapper "Taskbar not installed, please install it so that you wouldn't end"
 		echowrapper "up in a situation where the launcher is not installed"
@@ -199,8 +201,24 @@ $SCRCPY_PID = (Start-Process -NoNewWindow -FilePath $PATHS.scrcpy -PassThru -Arg
 
 $INTERVAL = 1
 
-$CONNECTION_UPDATER_PID = (Start-Process -NoNewWindow -FilePath "powershell" -PassThru -ArgumentList "./connectionKeeper.ps1 $FILE $INTERVAL $($PATHS.adb)").ID
-$ADB_SHELL_PID = (Start-Process -NoNewWindow -FilePath $PATHS.adb -PassThru -ArgumentList shell, "$TARGET_SCRIPT1 $FILE $INTERVAL").ID
+# Connection status updater job
+Start-Job -Name ConnectionStatusUpdater -ScriptBlock {
+	param($p1, $p2, $p3)
+	$FILE = $p1
+	$INTERVAL = $p2
+	$ADB = $p3
+
+	$number = 0
+	while ($true) {
+		& $ADB shell "echo $number > $FILE"
+		#& $ADB shell "cat $FILE"
+		$number = ($number + 1) % 2
+		Start-Sleep $INTERVAL
+	}
+} -ArgumentList $FILE, $INTERVAL, $PATHS.adb
+
+# Run updater script
+Start-Process -NoNewWindow -FilePath $PATHS.adb -ArgumentList shell, "$TARGET_SCRIPT1 $FILE $INTERVAL"
 
 # Add disclaimer
 echowrapper "-----------------------------------------------------"
@@ -218,17 +236,11 @@ catch {
 }
 
 try {
-	Stop-Process -ErrorAction Stop -Id $CONNECTION_UPDATER_PID
+	Stop-Job -Name ConnectionStatusUpdater
+	Remove-Job -Name ConnectionStatusUpdater -Force
 }
 catch {
 	echowrapper "Connection updater script ended unexpectedly. Ending..."
-}
-
-try {
-	Stop-Process -ErrorAction Stop -Id $ADB_SHELL_PID
-}
-catch {
-	echowrapper "ADB shell ended unexpectedly. Ending..."
 }
 
 exit 0
