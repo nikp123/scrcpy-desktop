@@ -94,9 +94,21 @@ function get_display_params {
 	TARGET_DISPLAY_MODE=$(echo $RESOLUTION/$DENSITY)
 }
 
+TARGET_CONNECTION_TIMEOUT=1
 TARGET_TMP_DIR=/data/local/tmp
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
 TARGET_SCRIPT2=$TARGET_TMP_DIR/scrcpy-payload2.sh
+TARGET_FILE=$TARGET_TMP_DIR/VerySpecificFileNameThatIsVeryUnlikelyToOverlapWithAnotherOneThatAlreadyExistJustForSure21341r124kajfosfhoshifosngvoierg.txt
+
+# Background process used to keep track whether the connection is still alive
+function keep_alive {
+	number=0
+	while true; do
+		adb shell "echo $number > $TARGET_FILE"
+		number=$(( (number+1)%2 ))
+		sleep $TARGET_CONNECTION_TIMEOUT
+	done
+}
 
 # Check if host is capable
 host_sanity_check
@@ -165,8 +177,12 @@ adb push payload/stage1.sh $TARGET_SCRIPT1
 adb push payload/stage2.sh $TARGET_SCRIPT2
 adb shell chmod +x $TARGET_SCRIPT1
 adb shell chmod +x $TARGET_SCRIPT2
+
+keep_alive &
+KEEP_ALIVE_PID=$!
+
 # Mute the script as it does produce a lot of garbage
-adb shell $TARGET_SCRIPT1 &> /dev/null &
+adb shell $TARGET_SCRIPT1 $TARGET_FILE $TARGET_CONNECTION_TIMEOUT &> /dev/null &
 
 # Add disclaimer
 echo "-----------------------------------------------------"
@@ -178,5 +194,7 @@ echo "-----------------------------------------------------"
 # Because wait is broken, I'm using this
 echo SCRCPY PID: $SCRCPY_PID
 tail --pid=$SCRCPY_PID -f /dev/null
+
+kill -9 $KEEP_ALIVE_PID
 
 exit 0

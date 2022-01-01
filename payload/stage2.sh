@@ -33,6 +33,7 @@ while [ true ]; do
 		echowrapper "Same value as before for $current_try time ($nr)"
 	else
 		current_try=0
+		old_nr=$nr
 	fi
 
 	sleep $INTERVAL
