@@ -3,7 +3,7 @@
 FILE=$1
 INTERVAL=$2
 
-echowrapper() {
+function echowrapper() {
 	log -t payload2 $*
 }
 
@@ -21,21 +21,19 @@ current_try=0
 old_nr=`cat $FILE`
 
 # Check if the given file was changed recently. If not then stop checking and reset settings to the defaults.
-while : 
-do
+while [ true ]; do
 	nr=`cat $FILE`
 
-	if (( $nr == $old_nr )); then 
-		if (( $current_try == $MAX_RETRY_COUNT )); then
+	if [ $nr -eq $old_nr ]; then
+		if [ $current_try -eq $MAX_RETRY_COUNT ]; then
 			echowrapper "Same value as before for $current_try time (ending...)"
 			break
 		fi
 		current_try=$(($current_try+1))
 		echowrapper "Same value as before for $current_try time ($nr)"
-	else 
+	else
 		current_try=0
 	fi
-	
 
 	sleep $INTERVAL
 done
