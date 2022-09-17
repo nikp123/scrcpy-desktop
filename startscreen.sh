@@ -49,7 +49,7 @@ function target_sanity_check {
 		exit 1
 
 	# Check if all the executables are present on the target device
-	for i in sh ps grep; do
+	for i in sh ps grep cut sort uniq head; do
 		adb shell which $i >/dev/null 2>&1
 		[[ $? -ne 0 ]] && \
 			echo "Your Android device is missing '$i' and this script won't work without it. Sorry..." && \
@@ -142,8 +142,10 @@ adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
 # Wait for the display to appear
 sleep 1
 
-# Do your magic
-display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
+# Should work up untill android 12L (13 untested) 
+# Selects the first of found displays (todo add option to select manually if there is more than one external display 
+# so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
+display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort|uniq|grep -v 0|head -n1')
 
 # if fetching fails, try defaults
 if [ "$display" = "" ]; then
@@ -159,7 +161,7 @@ if [ "$display" = "" ]; then
 	sleep 1
 
 	# Do your magic
-	display=$(adb shell dumpsys display | grep "  Display " | cut -d' ' -f4 | grep -v "0:" | sed -e 's/://')
+	display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort|uniq|grep -v 0|head -n1')
 fi
 
 # use -S if you're edgy
