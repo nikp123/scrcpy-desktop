@@ -145,7 +145,7 @@ sleep 1
 # Should work up untill android 12L (13 untested) 
 # Selects the first of found displays (todo add option to select manually if there is more than one external display 
 # so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
-display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort|uniq|grep -v 0|head -n1')
+display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort -n|uniq|grep -v "^0$"|head -n1')
 
 # if fetching fails, try defaults
 if [ "$display" = "" ]; then
@@ -161,7 +161,7 @@ if [ "$display" = "" ]; then
 	sleep 1
 
 	# Do your magic
-	display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort|uniq|grep -v 0|head -n1')
+	display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort -n|uniq|grep -v "^0$"|head -n1')
 fi
 
 # use -S if you're edgy

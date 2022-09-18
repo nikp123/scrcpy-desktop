@@ -168,7 +168,7 @@ Start-Sleep 1
 # Should work up untill android 12L (13 untested) 
 # Selects the first of found displays (todo add option to select manually if there is more than one external display 
 # so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
-$display_fetch_cmd = 'dumpsys display|grep mDisplayId=|cut -d \"=\" -f2|sort|uniq|grep -v 0|head -n1'
+$display_fetch_cmd = 'dumpsys display|grep mDisplayId=|cut -d \"=\" -f2|sort -n|uniq|grep -v \"^0$\"|head -n1'
 $display = [string](& $PATHS.adb shell "$display_fetch_cmd")
 
 ## if fetching fails, try defaults
