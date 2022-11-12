@@ -78,7 +78,7 @@ function target_sanity_check {
 	}
 
 	# Check if all the executables are present on the target device
-	$BINlist = "sh,ps,grep"
+	$BINlist = "sh,ps,grep,cut,sort,uniq,head"
 	$BINlist = $BINlist.split(",");
 	foreach ($i in $BINlist) {
 		$output = [string](& $PATHS.adb shell "which $i")
@@ -165,8 +165,10 @@ $TARGET_DISPLAY_MODE = "$RESOLUTION`/$DENSITY"
 # Wait for the display to appear
 Start-Sleep 1
 
-# Do your magic
-$display_fetch_cmd = 'dumpsys display | grep \"  Display \" | cut -d\" \" -f4 | grep -v "0:" | sed -e \"s/://\"'
+# Should work up untill android 12L (13 untested) 
+# Selects the first of found displays (todo add option to select manually if there is more than one external display 
+# so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
+$display_fetch_cmd = 'dumpsys display|grep mDisplayId=|cut -d \"=\" -f2|sort -n|uniq|grep -v \"^0$\"|head -n1'
 $display = [string](& $PATHS.adb shell "$display_fetch_cmd")
 
 ## if fetching fails, try defaults
