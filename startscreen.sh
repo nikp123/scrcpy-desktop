@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 LAUNCHER_PACKAGE=com.farmerbb.taskbar
-KEYBOARD_PACKAGE=com.wparam.nullkeyboard
 
 # Functions go here
 function enable_desktop_mode {
@@ -35,7 +34,7 @@ function enable_desktop_mode {
 
 function host_sanity_check {
 	# Check if all the executables are present on the host device
-	for i in adb scrcpy tail pgrep; do
+	for i in adb scrcpy bc xdpyinfo tail pgrep; do
 		which $i >/dev/null 2>&1
 		[[ $? -ne 0 ]] && \
 			echo "Please download $i and add it into your path before running this script." && \
@@ -55,16 +54,6 @@ function target_sanity_check {
 			echo "Your Android device is missing '$i' and this script won't work without it. Sorry..." && \
 			exit 1
 	done
-
-	keyboardpresent=$(adb shell pm list package | grep $KEYBOARD_PACKAGE)
-	if [ -z $keyboardpresent ]; then
-		echo "Null keyboard not installed. Please install it so we can hide the"
-		echo "keyboard while in desktop mode!"
-		echo
-		echo "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
-		adb shell am start -a android.intent.action.VIEW -d "market://details?=$KEYBOARD_PACKAGE"
-		read -p "Once you've installed the app, press any key to continue."
-	fi
 
 	launcherpresent=$(adb shell pm list package | grep $LAUNCHER_PACKAGE)
 	if [ -z $launcherpresent ]; then
@@ -142,8 +131,8 @@ adb shell settings put global overlay_display_devices $TARGET_DISPLAY_MODE
 # Wait for the display to appear
 sleep 1
 
-# Should work up untill android 12L (13 untested) 
-# Selects the first of found displays (todo add option to select manually if there is more than one external display 
+# Should work up until android 13 (later versions untested)
+# Selects the first of found displays (todo add option to select manually if there is more than one external display
 # so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
 display=$(adb shell 'dumpsys display|grep mDisplayId=|cut -d "=" -f2|sort -n|uniq|grep -v "^0$"|head -n1')
 
@@ -165,7 +154,7 @@ if [ "$display" = "" ]; then
 fi
 
 # use -S if you're edgy
-scrcpy --display $display -w -S &
+scrcpy --display $display -w -S -K &
 
 # Bash let me down so this is the alternative I have to work with
 SCRCPY_PID=$(pgrep scrcpy)

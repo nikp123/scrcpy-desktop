@@ -1,7 +1,6 @@
 param($Resolution, $DPI)
 
 $LAUNCHER_PACKAGE = "com.farmerbb.taskbar"
-$KEYBOARD_PACKAGE = "com.wparam.nullkeyboard"
 $SCRIPT_NAME = $MyInvocation.MyCommand.Name
 
 # By default get adb and scrcpy paths from special bin folder, like in older versions of this script.
@@ -87,17 +86,6 @@ function target_sanity_check {
 		}
 	}
 
-	if ( !([string](& $PATHS.adb shell "pm list package | grep $KEYBOARD_PACKAGE"))) {
-		echowrapper "Null keyboard not installed. Please install it so we can hide the"
-		echowrapper "keyboard while in desktop mode!"
-		echowrapper ""
-		echowrapper "App link: https://play.google.com/store/apps/details?id=$KEYBOARD_PACKAGE"
-		echowrapper "After installing the app, we can continue..."
-		# It seams that null keyboard was pulled from playstore so it may not work.
-		& $PATHS.adb shell am start -a android.intent.action.VIEW -d "market://details?id=$KEYBOARD_PACKAGE"
-		pause
-	}
-
 	if ( !([string](& $PATHS.adb shell "pm list package | grep $LAUNCHER_PACKAGE"))) {
 		echowrapper "Taskbar not installed, please install it so that you wouldn't end"
 		echowrapper "up in a situation where the launcher is not installed"
@@ -165,7 +153,7 @@ $TARGET_DISPLAY_MODE = "$RESOLUTION`/$DENSITY"
 # Wait for the display to appear
 Start-Sleep 1
 
-# Should work up untill android 12L (13 untested) 
+# Should work up untill android 13 (later versions untested) 
 # Selects the first of found displays (todo add option to select manually if there is more than one external display 
 # so 3 in total because we ommit id=0 as it's the main display that doesn't show dektop mode - at least yet)
 $display_fetch_cmd = 'dumpsys display|grep mDisplayId=|cut -d \"=\" -f2|sort -n|uniq|grep -v \"^0$\"|head -n1'
@@ -189,7 +177,7 @@ if ( "$display" -eq "" ) {
 }
 
 # use -S if you're edgy
-$SCRCPY_PID = (Start-Process -NoNewWindow -FilePath $PATHS.scrcpy -PassThru -ArgumentList @('--display', "$display", '-w', '--turn-screen-off')).ID
+$SCRCPY_PID = (Start-Process -NoNewWindow -FilePath $PATHS.scrcpy -PassThru -ArgumentList @('--display', "$display", '-w', '--turn-screen-off', '-K')).ID
 
 #
 # Payload section starts here
