@@ -64,13 +64,18 @@ Troubleshooting
 
 If after running the script all you get is a black screen, that means that the
 Android OS that you're running is missing a "desktop launcher". This can be fixed
-by installing it, for example 
+by installing it, for example
 [Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar).
+
+
+### If you have trouble getting audio to work. See:
+
+ - [Genymobile's wiki page](https://github.com/Genymobile/scrcpy/blob/master/doc/audio.md)
+ - [Issue #15](https://github.com/nikp123/scrcpy-desktop/issues/15)
 
 Limitations
 -----------
 
- * No audio at all
  * A very botched implementation ATM
  * The Windows version has no way to automatically obtain the resolution
 
