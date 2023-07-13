@@ -83,6 +83,8 @@ function get_display_params {
 	TARGET_DISPLAY_MODE=$(echo $RESOLUTION/$DENSITY)
 }
 
+PAYLOAD_STORE_DIR=payload
+
 TARGET_CONNECTION_TIMEOUT=1
 TARGET_TMP_DIR=/data/local/tmp
 TARGET_SCRIPT1=$TARGET_TMP_DIR/scrcpy-payload1.sh
@@ -156,16 +158,17 @@ fi
 # use -S if you're edgy
 scrcpy --display $display -w -S -K &
 
-# Bash let me down so this is the alternative I have to work with
-SCRCPY_PID=$(pgrep scrcpy)
+# ???. Use the this one in case $! doesn't work??
+#SCRCPY_PID=$(pgrep scrcpy)
+SCRCPY_PID=$!
 
 #
 # Payload section starts here
 #
 
 # Execute the payload stream generator remotely (with precisely the parameters that it wants)
-adb push payload/stage1.sh $TARGET_SCRIPT1
-adb push payload/stage2.sh $TARGET_SCRIPT2
+adb push $PAYLOAD_STORE_DIR/stage1.sh $TARGET_SCRIPT1
+adb push $PAYLOAD_STORE_DIR/stage2.sh $TARGET_SCRIPT2
 adb shell chmod +x $TARGET_SCRIPT1
 adb shell chmod +x $TARGET_SCRIPT2
 
