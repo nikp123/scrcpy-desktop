@@ -156,7 +156,7 @@ if [ "$display" = "" ]; then
 fi
 
 # use -S if you're edgy
-scrcpy --display $display -w -S -K &
+scrcpy --display-id $display -w -S -K &
 
 # ???. Use the this one in case $! doesn't work??
 #SCRCPY_PID=$(pgrep scrcpy)
