@@ -21,18 +21,13 @@ How to do it
 ### On Android device
 
 Install
-[Null keyboard](https://play.google.com/store/apps/details?id=com.wparam.nullkeyboard)
-and enable as an input layout it within your language settings.
-It seams to be unavailable in playstore for a while now. In the meantime you can install it from reputable sources like apkmirror.
-
-Install
 [Taskbar](https://play.google.com/store/apps/details?id=com.farmerbb.taskbar).
 
-If you don't you'll automatically get redirected to the Play Store page of those two apps.
+If you don't you'll automatically get redirected to the Play Store page of that app.
 
 ### On Linux
 
-Just run ```startscreen.sh```, it should do all the magic itself.
+Just run ``startscreen.sh``, it should do all the magic itself.
 
 NOTE: It may or may not prompt you to restart your device, which you have to do
 for a one-time setup. After that, you no longer need to do (unless you change
@@ -40,20 +35,20 @@ that particular option under developer settings)
 
 #### Changing options
 
-When running the ```startscreen.sh``` script you can change the resolution and
-DPI via command-line arguments, for example: ```./startscreen.sh 1920x1080 120```
+When running the ``startscreen.sh`` script you can change the resolution and
+DPI via command-line arguments, for example: ``./startscreen.sh 1920x1080 120``
 
 ### On Windows
 
 1. [Download this repo](https://github.com/nikp123/scrcpy-desktop/archive/refs/heads/main.zip)
 and extract the contents.
-2. Inside this repo, create a folder named ```bin```.
+2. Inside this repo, create a folder named ``bin``.
 3. [Download scrcpy](https://github.com/Genymobile/scrcpy/releases) and extract
-it's contents so that the ```.exe``` files are located within the bin folder and
+it's contents so that the ``.exe`` files are located within the bin folder and
 not as an sub-folder.
 4. Open the extracted repo folder within explorer.
-5. Type ```powershell``` within the address bar and press enter
-6. Type ```.\startscreen.ps1 -Resolution widthxheight -DPI your_desired_dpi``` and
+5. Type ``powershell`` within the address bar and press enter
+6. Type ``.\startscreen.ps1 -Resolution widthxheight -DPI your_desired_dpi`` and
 press enter.
 7. If Windows bothers you with a prompt talking about trust, press R to run the
 script.
@@ -72,6 +67,15 @@ by installing it, for example
 
  - [Genymobile's wiki page](https://github.com/Genymobile/scrcpy/blob/master/doc/audio.md)
  - [Issue #15](https://github.com/nikp123/scrcpy-desktop/issues/15)
+
+
+### Virtual keyboard pops up when I use this script!
+
+In case the virtual keyboard pops up when you use this script, install
+[No Keyboard: Hideable keyboard](https://play.google.com/store/apps/details?id=io.github.visnkmr.nokeyboard)
+and enable as an input layout it within your language settings. This should prevent that from happening.
+
+
 
 Limitations
 -----------
